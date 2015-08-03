@@ -13,11 +13,11 @@ Until we have a Makefile:
 ```sh
 $ g++ -c HuffmanBinaryTree.cpp
 $ g++ -c processing.cpp
-$ g++ HuffmanBinaryTree.o processing.o -o out
+$ g++ HuffmanBinaryTree.o processing.o -o bin/out
 ```
 
 ## Running
 After building:
 ```sh
-$ ./out
+$ bin/out
 ```
