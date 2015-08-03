@@ -8,3 +8,11 @@ char HBTNode::getSymbol() { return this -> m_symbol;}
 bool HBTNode::isLeaf() { return this -> m_leaf;}
 
 void HBTNode::setParent(HBTNode &parent) { this -> m_parent = &parent;}
+
+bool operator < (const HBTNode &lhs, const HBTNode &rhs) {
+    return lhs.m_frequency > rhs.m_frequency;
+}
+
+bool operator > (const HBTNode &lhs, const HBTNode &rhs) {
+    return lhs.m_frequency < rhs.m_frequency;
+}

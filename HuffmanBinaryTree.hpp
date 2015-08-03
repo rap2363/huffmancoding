@@ -1,6 +1,7 @@
 #ifndef HUFFBINARYTREE_H
 #define HUFFBINARYTREE_H
-#include <iostream>
+
+#include <stddef.h>
 
 class HBTNode {
     HBTNode* m_left;
@@ -29,6 +30,10 @@ public:
 
     // Setter method
     void setParent(HBTNode&);
+
+    // Comparator methods
+    friend bool operator< (const HBTNode& lhs, const HBTNode& rhs);
+    friend bool operator> (const HBTNode& lhs, const HBTNode& rhs);
 };
 
 #endif
