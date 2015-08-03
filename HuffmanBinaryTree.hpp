@@ -7,9 +7,9 @@ class HBTNode {
     HBTNode* m_left;
     HBTNode* m_right;
     HBTNode* m_parent;
-    const int m_frequency;
-    const char m_symbol;
-    const bool m_leaf;
+    int m_frequency;
+    char m_symbol;
+    bool m_leaf;
 
 public:
     // Initialize the node as a leaf
@@ -17,23 +17,22 @@ public:
     m_left (NULL), m_right (NULL), m_parent (NULL), m_frequency (frequency), m_symbol (symbol), m_leaf (true) { }
 
     // Initialize the node as a parent
-    HBTNode(HBTNode &left, HBTNode& right) :
-    m_left (&left), m_right (&right), m_parent (NULL), m_frequency (left.getFrequency() + right.getFrequency()), m_symbol ('\0'), m_leaf (false) { }
+    HBTNode(HBTNode* left, HBTNode* right) :
+    m_left (left), m_right (right), m_parent (NULL), m_frequency (left -> getFrequency() + right -> getFrequency()), m_symbol ('\0'), m_leaf (false) { }
 
     // Getter methods
-    HBTNode* getLeft();
-    HBTNode* getRight();
-    HBTNode* getParent();
-    int getFrequency();
-    char getSymbol();
-    bool isLeaf();
+    HBTNode* getLeft() const;
+    HBTNode* getRight() const;
+    HBTNode* getParent() const;
+    int getFrequency() const;
+    char getSymbol() const;
+    bool isLeaf() const;
 
     // Setter method
-    void setParent(HBTNode&);
+    void setParent(HBTNode*);
 
-    // Comparator methods
-    friend bool operator< (const HBTNode& lhs, const HBTNode& rhs);
-    friend bool operator> (const HBTNode& lhs, const HBTNode& rhs);
+    // Destructor method
+    ~HBTNode();
 };
 
 #endif
