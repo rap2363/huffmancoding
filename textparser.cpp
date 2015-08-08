@@ -4,10 +4,7 @@
 
 #include <boost/serialization/serialization.hpp>
 #include <boost/serialization/map.hpp>
-#include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
-#include <boost/archive/text_oarchive.hpp>
 
 int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;

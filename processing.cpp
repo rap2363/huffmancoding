@@ -1,7 +1,13 @@
 #include <iostream>
+#include <fstream>
 #include <queue>
 #include <map>
-#include "HuffmanBinaryTree.hpp"
+#include "datastructures/HuffmanBinaryTree.hpp"
+#include "datastructures/BinaryEncoder.hpp"
+
+#include <boost/serialization/serialization.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 
 class BinaryTreeNodeComparator
 {
@@ -55,36 +61,35 @@ HBTNode* constructTree(const std::map<char, int> symbolFrequencyMap) {
     return pq.top();
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
 
-    symbolMap.insert(std::pair<char, int>('a', 8167));
-    symbolMap.insert(std::pair<char, int>('b', 1492));
-    symbolMap.insert(std::pair<char, int>('c', 2782));
-    symbolMap.insert(std::pair<char, int>('d', 4253));
-    symbolMap.insert(std::pair<char, int>('e', 12702));
-    symbolMap.insert(std::pair<char, int>('f', 2228));
-    symbolMap.insert(std::pair<char, int>('g', 2015));
-    symbolMap.insert(std::pair<char, int>('h', 6094));
-    symbolMap.insert(std::pair<char, int>('i', 6966));
-    symbolMap.insert(std::pair<char, int>('j', 153));
-    symbolMap.insert(std::pair<char, int>('k', 772));
-    symbolMap.insert(std::pair<char, int>('l', 4025));
-    symbolMap.insert(std::pair<char, int>('m', 2406));
-    symbolMap.insert(std::pair<char, int>('n', 6749));
-    symbolMap.insert(std::pair<char, int>('o', 7507));
-    symbolMap.insert(std::pair<char, int>('p', 1929));
-    symbolMap.insert(std::pair<char, int>('q', 95));
-    symbolMap.insert(std::pair<char, int>('r', 5987));
-    symbolMap.insert(std::pair<char, int>('s', 6327));
-    symbolMap.insert(std::pair<char, int>('t', 9056));
-    symbolMap.insert(std::pair<char, int>('u', 2758));
-    symbolMap.insert(std::pair<char, int>('v', 978));
-    symbolMap.insert(std::pair<char, int>('w', 2361));
-    symbolMap.insert(std::pair<char, int>('x', 150));
-    symbolMap.insert(std::pair<char, int>('y', 1974));
-    symbolMap.insert(std::pair<char, int>('z', 74));
-
-    debug_printLeafCodes(constructTree(symbolMap));
+    if (argc != 2) {
+        std::cerr << "Incorrect Number of arguments!" << std::endl;
+        return 0;
+    }
+    std::ifstream ifs(argv[1]);
+    boost::archive::binary_iarchive ia(ifs);
+    ia >> symbolMap;
+    ifs.close();
+    HBTNode* huffman_root = constructTree(symbolMap);
+    debug_printLeafCodes(huffman_root);
+    BinaryEncoder be;
+    std::vector<bool> bits;
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(true);
+    bits.push_back(false);
+    bits.push_back(true);
+    be.addBits(bits);
+    std::ofstream ofs("binaryoutfile");
+    be.streamOut(ofs);
+    ofs.close();
 }
 

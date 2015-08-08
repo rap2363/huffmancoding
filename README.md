@@ -11,9 +11,12 @@ nodes. Add the internal node back into the priority queue.
 ## Compiling
 Until we have a Makefile:
 ```sh
-$ g++ -c HuffmanBinaryTree.cpp
+$ g++ -c datastructures/HuffmanBinaryTree.cpp -o datastructures/HuffmanBinaryTree.o
+$ g++ -c datastructures/BinaryEncoder.cpp -o datastructures/BinaryEncoder.o
 $ g++ -c processing.cpp
-$ g++ HuffmanBinaryTree.o processing.o -o bin/out
+$ g++ textparser.cpp -lboost_serialization -o bin/csm
+$ g++ datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o processing.o -o bin/out -lboost_serialization
+$ bin/out bin/csm
 ```
 
 ## Running
