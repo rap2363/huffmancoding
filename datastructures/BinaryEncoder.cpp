@@ -4,18 +4,20 @@
 #include "BinaryEncoder.hpp"
 
 const unsigned NUM_CHAR_BITS = 8;
-const unsigned char MSB_BIT = 1 << 7;
 
 void streamCharacterOut(BinaryEncoder be, std::ofstream &ofs, int i) {
     unsigned char char_to_write = 0;
     int initial = i;
+    int num_filling_zeros = NUM_CHAR_BITS;
     unsigned stream_size = be.getStreamSize();
-    for (;i < stream_size && i <= initial + NUM_CHAR_BITS; i++) {
-        char_to_write = char_to_write >> 1;
+    for (;i < stream_size && i < initial + NUM_CHAR_BITS; i++) {
+        char_to_write = char_to_write << 1;
         if (be.m_bits[i]) {
-            char_to_write += MSB_BIT;
+            char_to_write += 0x01;
         }
+        num_filling_zeros--;
     }
+    char_to_write = char_to_write << num_filling_zeros;
     ofs.put(char_to_write);
 }
 
@@ -51,7 +53,17 @@ void BinaryEncoder::streamIn(std::ifstream &ifs) {
         while (ifs.get(c)) {
             if (isHeader) {
                 header_byte = c;
+                isHeader = false;
             }
+            else {
+                for (int i = 1; i <= NUM_CHAR_BITS; i++) {
+                    this -> addBit((c >> (NUM_CHAR_BITS - i))  %2);
+                }
+            }
+        }
+        while (header_byte) {
+            this -> removeBit();
+            header_byte--;
         }
         ifs.close();
     }
@@ -59,6 +71,18 @@ void BinaryEncoder::streamIn(std::ifstream &ifs) {
 
 void BinaryEncoder::addBit(bool bit) {
     this -> m_bits.push_back(bit);
+}
+
+void BinaryEncoder::removeBit() {
+    this -> m_bits.pop_back();
+}
+
+// DEBUG METHOD DELETE ME
+void BinaryEncoder::debugPrint() {
+    for (int i =0; i < this -> m_bits.size(); i++) {
+        std::cout << this -> m_bits[i];
+    }
+    std::cout << std::endl;
 }
 
 void BinaryEncoder::addBits(std::vector<bool> bits) {

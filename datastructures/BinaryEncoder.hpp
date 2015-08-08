@@ -11,11 +11,13 @@ public:
     BinaryEncoder() {}
 
     friend void streamCharacterOut(BinaryEncoder, std::ofstream &, int);
+    void debugPrint(); // DEBUG METHOD DELETE ME
     void streamOut(std::ofstream &);
     void streamIn(std::ifstream &);
 
     void addBit(bool);
     void addBits(std::vector<bool>);
+    void removeBit();
 
     void clearBits();
 

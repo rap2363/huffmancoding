@@ -60,6 +60,11 @@ HBTNode* constructTree(const std::map<char, int> symbolFrequencyMap) {
     }
     return pq.top();
 }
+void getRandomBinarySequence(std::vector<bool> &bits, int n) {
+    while (n-- > 0) {
+        bits.push_back(rand() % 2);
+    }
+}
 
 int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
@@ -76,20 +81,16 @@ int main(int argc, char *argv[]) {
     debug_printLeafCodes(huffman_root);
     BinaryEncoder be;
     std::vector<bool> bits;
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(true);
-    bits.push_back(false);
-    bits.push_back(true);
+    getRandomBinarySequence(bits, 10001);
     be.addBits(bits);
+    std::cout << "Initial:    ";
+    be.debugPrint();
     std::ofstream ofs("binaryoutfile");
     be.streamOut(ofs);
-    ofs.close();
+    be.clearBits();
+    std::ifstream ifs2("binaryoutfile");
+    be.streamIn(ifs2);
+    std::cout << "Round Trip: ";
+    be.debugPrint();
 }
 
