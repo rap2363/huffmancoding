@@ -1,27 +1,10 @@
 #include <fstream>
 #include <iostream>
-#include <vector>
-#include <map>
+
 #include "../utilities.hpp"
 #include "BinaryEncoder.hpp"
 
 const unsigned NUM_CHAR_BITS = 8;
-
-void streamCharacterOut(BinaryEncoder be, std::ofstream &ofs, int i) {
-    unsigned char char_to_write = 0;
-    int initial = i;
-    int num_filling_zeros = NUM_CHAR_BITS;
-    unsigned stream_size = be.getStreamSize();
-    for (;i < stream_size && i < initial + NUM_CHAR_BITS; i++) {
-        char_to_write = char_to_write << 1;
-        if (be.m_bits[i]) {
-            char_to_write += 0x01;
-        }
-        num_filling_zeros--;
-    }
-    char_to_write = char_to_write << num_filling_zeros;
-    ofs.put(char_to_write);
-}
 
 // Outputs bits to a file in characters. Header character is an unsigned int indicating how many bits to ignore in the last
 // streamed character
@@ -32,13 +15,28 @@ void BinaryEncoder::streamOutBinaryFile(std::ofstream &ofs) {
     else {
         unsigned stream_size = this -> getStreamSize();
         unsigned header_byte = NUM_CHAR_BITS - stream_size % NUM_CHAR_BITS;
-        if (header_byte == 8) {
-            header_byte = 0; // Otherwise we won't read the last character.
+        header_byte = header_byte == 8 ? 0 : header_byte; // So we don't skip the last byte.
+        unsigned buffer_size = 1 + stream_size / NUM_CHAR_BITS;
+        if (stream_size % 8 != 0) {
+            buffer_size++; //Streams that aren't exact multiples of 8 need one more character.
         }
-        ofs.put(header_byte);
+        char* char_buffer = new char[buffer_size];
+        int buffer_index = 0;
+        char_buffer[buffer_index++] = header_byte;
         for (int i = 0; i < stream_size; i += NUM_CHAR_BITS) {
-            streamCharacterOut(*this, ofs, i);
+            unsigned char char_to_write = 0;
+            unsigned num_filling_zeros = NUM_CHAR_BITS;
+            for (int j=i;j < stream_size && j < i + NUM_CHAR_BITS; ++j) {
+                char_to_write = char_to_write << 1;
+                if (m_bits[j]) {
+                    char_to_write += 0x01;
+                }
+                num_filling_zeros--;
+            }
+            char_buffer[buffer_index++] = char_to_write;
         }
+        ofs.write(char_buffer, sizeof(char)*buffer_size);
+        delete[] char_buffer;
     }
 }
 

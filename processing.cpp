@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
     ifRead.close();
 
     std::cout << "Writing out compression" << std::endl;
-    std::ofstream obfs("binaryoutfile");
+    std::ofstream obfs("binaryoutfile", std::ios::out | std::ios::binary);
     be.streamOutBinaryFile(obfs);
     obfs.close();
 
