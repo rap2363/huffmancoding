@@ -60,6 +60,8 @@ HBTNode* constructTree(const std::map<char, int> symbolFrequencyMap) {
     }
     return pq.top();
 }
+
+// Debug method, delete me!
 void getRandomBinarySequence(std::vector<bool> &bits, int n) {
     while (n-- > 0) {
         bits.push_back(rand() % 2);
@@ -68,29 +70,32 @@ void getRandomBinarySequence(std::vector<bool> &bits, int n) {
 
 int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
-
-    if (argc != 2) {
-        std::cerr << "Incorrect Number of arguments!" << std::endl;
+    if (argc != 3) {
+        std::cerr << "Processor requires 2 arguments: <file_to_decompress> <symbolMap>" << std::endl;
         return 0;
     }
-    std::ifstream ifs(argv[1]);
+    std::ifstream ifs(argv[2]);
     boost::archive::binary_iarchive ia(ifs);
     ia >> symbolMap;
     ifs.close();
+
     HBTNode* huffman_root = constructTree(symbolMap);
     debug_printLeafCodes(huffman_root);
+
+    std::cout << "Compressing File..." << std::endl;
     BinaryEncoder be;
-    std::vector<bool> bits;
-    getRandomBinarySequence(bits, 10001);
-    be.addBits(bits);
-    std::cout << "Initial:    ";
-    be.debugPrint();
-    std::ofstream ofs("binaryoutfile");
-    be.streamOut(ofs);
-    be.clearBits();
-    std::ifstream ifs2("binaryoutfile");
-    be.streamIn(ifs2);
-    std::cout << "Round Trip: ";
-    be.debugPrint();
+    std::ifstream ifRead(argv[1]);
+    be.streamInCharacterFile(ifRead, huffman_root);
+    ifRead.close();
+
+    std::cout << "Writing out compression" << std::endl;
+    std::ofstream obfs("binaryoutfile");
+    be.streamOutBinaryFile(obfs);
+    obfs.close();
+
+    std::cout << "Round tripping" << std::endl;
+    std::ofstream ofs("charoutfile");
+    be.streamOutCharacterFile(ofs, huffman_root);
+    ofs.close();
 }
 

@@ -1,6 +1,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <map>
+#include "../utilities.hpp"
 #include "BinaryEncoder.hpp"
 
 const unsigned NUM_CHAR_BITS = 8;
@@ -23,7 +25,7 @@ void streamCharacterOut(BinaryEncoder be, std::ofstream &ofs, int i) {
 
 // Outputs bits to a file in characters. Header character is an unsigned int indicating how many bits to ignore in the last
 // streamed character
-void BinaryEncoder::streamOut(std::ofstream &ofs) {
+void BinaryEncoder::streamOutBinaryFile(std::ofstream &ofs) {
     if (!ofs) {
         std::cerr << "Could not open file to stream bits to!" << std::endl;
     }
@@ -37,12 +39,11 @@ void BinaryEncoder::streamOut(std::ofstream &ofs) {
         for (int i = 0; i < stream_size; i += NUM_CHAR_BITS) {
             streamCharacterOut(*this, ofs, i);
         }
-        ofs.close();
     }
 }
 
-// Read in ASCII characters from a text file encoded with a header byte indicating final character length.
-void BinaryEncoder::streamIn(std::ifstream &ifs) {
+// Read in ASCII characters from a text file encoded with a header byte indicating how many bits to ignore in the last byte.
+void BinaryEncoder::streamInBinaryFile(std::ifstream &ifs) {
     if (!ifs) {
         std::cerr << "Could not open file to stream bits from!" << std::endl;
     }
@@ -65,7 +66,39 @@ void BinaryEncoder::streamIn(std::ifstream &ifs) {
             this -> removeBit();
             header_byte--;
         }
-        ifs.close();
+    }
+}
+
+// Streams out to a character file from the bits in the m_bits vector, using a Huffman Binary Tree.
+void BinaryEncoder::streamOutCharacterFile(std::ofstream &ofs, HBTNode* root) {
+    if (!ofs) {
+        std::cerr << "Could not open file to stream characters to!" << std::endl;
+    }
+    else {
+        HBTNode* currentNode = root;
+        for (auto iter = m_bits.begin(); iter != m_bits.end(); ++iter) {
+            currentNode = *iter ? currentNode -> getRight() : currentNode -> getLeft();
+            if (currentNode -> isLeaf()) {
+                ofs.put(currentNode -> getSymbol());
+                currentNode = root;
+            }
+        }
+    }
+}
+
+// Streams in a character file into the m_bits vector, using a Huffman Binary Tree.
+void BinaryEncoder::streamInCharacterFile(std::ifstream &ifs, HBTNode* root) {
+    std::map<char, std::vector<bool> > stc_map = Utilities::constructSymbolToCodeMap(root);
+    if (!ifs) {
+        std::cerr << "Could not open file to stream characters from!" << std::endl;
+    }
+    else {
+        char c;
+        while (ifs.get(c)) {
+            if (stc_map.find(c) != stc_map.end()) {
+                this -> addBits(stc_map[c]);
+            }
+        }
     }
 }
 
