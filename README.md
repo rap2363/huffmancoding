@@ -8,20 +8,20 @@ in a priority queue where they are arranged with lowest frequency --> highest pr
 nodes. Add the internal node back into the priority queue.
 - Have the two nodes point to the internal node as its children (left and right). Repeat this procedure until there is just one node (root) left.
 
-## Compiling
+## Building
 Until we have a Makefile:
 ```sh
 $ g++ -c datastructures/HuffmanBinaryTree.cpp -o datastructures/HuffmanBinaryTree.o
 $ g++ -c datastructures/BinaryEncoder.cpp -o datastructures/BinaryEncoder.o
 $ g++ -c utilities.cpp
-$ g++ textparser.cpp -lboost_serialization -o bin/tp
-$ g++ -c processing.cpp
-$ g++ datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o processing.o -o bin/processing -lboost_serialization
+$ g++ -c compress.cpp
+$ g++ -c decompress.cpp
+$ g++ datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o compress.o -o bin/compress -lboost_serialization
+$ g++ datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o decompress.o -o bin/decompress -lboost_serialization
 ```
 
 ## Running
-After building:
 ```sh
-$ bin/tp <inputFile> csm
-$ bin/processing <inputFile> csm
+$ bin/compress <file_to_compress>
+$ bin/decompress <file_to_decompress> <csm_file>
 ```
