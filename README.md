@@ -13,14 +13,15 @@ Until we have a Makefile:
 ```sh
 $ g++ -c datastructures/HuffmanBinaryTree.cpp -o datastructures/HuffmanBinaryTree.o
 $ g++ -c datastructures/BinaryEncoder.cpp -o datastructures/BinaryEncoder.o
+$ g++ -c utilities.cpp
+$ g++ textparser.cpp -lboost_serialization -o bin/tp
 $ g++ -c processing.cpp
-$ g++ textparser.cpp -lboost_serialization -o bin/csm
-$ g++ datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o processing.o -o bin/out -lboost_serialization
-$ bin/out bin/csm
+$ g++ datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o processing.o -o bin/processing -lboost_serialization
 ```
 
 ## Running
 After building:
 ```sh
-$ bin/out
+$ bin/tp <inputFile> csm
+$ bin/processing <inputFile> csm
 ```

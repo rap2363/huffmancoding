@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
 
     if (argc != 3) {
-        std::cout << "Incorrect number of arguments provided to textparser!" << std::endl;
+        std::cout << "Text parser requires 2 arguments: <file_to_compress> <symbolMap_out>" << std::endl;
     }
     else {
         std::ifstream file_name(argv[1]);
