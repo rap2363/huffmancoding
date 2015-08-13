@@ -5,6 +5,7 @@
 #include "BinaryEncoder.hpp"
 
 const unsigned NUM_CHAR_BITS = 8;
+
 // Read in ASCII characters from a text file encoded with a header byte indicating how many bits to ignore in the last byte.
 void BinaryEncoder::streamInBinaryFile(std::ifstream &ifs) {
     if (!ifs) {
@@ -98,6 +99,42 @@ void BinaryEncoder::compressToBinary(std::ifstream &char_fs, const int bit_strea
     }
     bin_fs.write(char_buffer, sizeof(char)*buffer_size);
     delete[] char_buffer;
+}
+
+void BinaryEncoder::decompressFromBinary(std::ifstream &bin_fs, std::ofstream &char_fs, const HBTNode* &huffman_root) {
+    if (!bin_fs) {
+        std::cerr << "Could not open file to decompress!" << std::endl;
+        return;
+    }
+
+    unsigned buffer_size = bin_fs.tellg();
+    int buffer_index = 0;
+    std::vector<char> char_buffer;
+    char c;
+    bool isHeader = true;
+    unsigned header_byte;
+    unsigned offset = 0;
+    bool direction;
+    const HBTNode* huffman_ptr = huffman_root;
+    while (bin_fs.get(c)) {
+        if (isHeader) {
+            header_byte = c;
+            isHeader = false;
+            continue;
+        }
+        if (++buffer_index == buffer_size) {
+            offset = header_byte;
+        }
+        for (int i = 1; i <= NUM_CHAR_BITS - offset; i++) {
+            bool direction = (c >> (NUM_CHAR_BITS - i))  % 2;
+            huffman_ptr = direction ? huffman_ptr -> getRight() : huffman_ptr -> getLeft();
+            if (huffman_ptr -> isLeaf()) {
+                char_buffer.push_back(huffman_ptr -> getSymbol());
+                huffman_ptr = huffman_root;
+            }
+        }
+    }
+    char_fs.write(&char_buffer[0], sizeof(char)*char_buffer.size());
 }
 
 void BinaryEncoder::addBit(bool bit) {

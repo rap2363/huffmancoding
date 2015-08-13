@@ -20,6 +20,7 @@ public:
     void streamOutCharacterFile(std::ofstream &, HBTNode*);
 
     void compressToBinary(std::ifstream &, const int, std::ofstream &, const std::map<char, const std::vector<bool> > &);
+    void decompressFromBinary(std::ifstream &, std::ofstream &, const HBTNode* &);
 
     void addBit(bool);
     void addBits(std::vector<bool>);
