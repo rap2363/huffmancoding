@@ -38,18 +38,17 @@ int main(int argc, char *argv[]) {
         oa << symbolMap;
         ocsmfs.close();
 
-        HBTNode* huffman_root = Utilities::constructTree(symbolMap);
+        const std::map<char, const std::vector<bool> >  stc_map = Utilities::constructSymbolToCodeMap(Utilities::constructTree(symbolMap));
+        int bit_stream_size = Utilities::getNumberOfBits(stc_map, symbolMap);
 
-        ifs.clear() ;
-        ifs.seekg(0, std::ios::beg) ;
-        std::cout << "Compressing File..." << std::endl;
-        BinaryEncoder be;
-        be.streamInCharacterFile(ifs, huffman_root);
-        ifs.close();
-
-        std::cout << "Writing out compression" << std::endl;
+        ifs.clear();
+        ifs.seekg(0, std::ios::beg);
         std::ofstream obfs(original_file_name+".bin", std::ios::out | std::ios::binary);
-        be.streamOutBinaryFile(obfs);
+
+        std::cout << "Compressing File to .bin & .csm binaries" << std::endl;
+        BinaryEncoder be;
+        be.compressToBinary(ifs, bit_stream_size, obfs, stc_map);
+        ifs.close();
         obfs.close();
     }
 }

@@ -1,8 +1,8 @@
 #include "utilities.hpp"
 
-void Utilities::getLeafCodes(const HBTNode* node, std::map<char, std::vector<bool> > &stc_map, std::vector<bool> current_code) {
+void Utilities::getLeafCodes(const HBTNode* node, std::map<char, const std::vector<bool> > &stc_map, std::vector<bool> current_code) {
     if (node -> isLeaf()) {
-        stc_map.insert(std::pair<char,std::vector<bool> >(node -> getSymbol(), current_code));
+        stc_map.insert(std::pair<char, const std::vector<bool> >(node -> getSymbol(), current_code));
     }
     else {
         if (node -> getLeft() != NULL) {
@@ -19,8 +19,8 @@ void Utilities::getLeafCodes(const HBTNode* node, std::map<char, std::vector<boo
 }
 
 // Constructs and returns a map of symbols to their respective codes.
-std::map<char, std::vector<bool> > Utilities::constructSymbolToCodeMap(const HBTNode* root) {
-    std::map<char, std::vector<bool> > stc_map;
+std::map<char, const std::vector<bool> > Utilities::constructSymbolToCodeMap(const HBTNode* root) {
+    std::map<char, const std::vector<bool> > stc_map;
     std::vector<bool> empty_code;
     if (root -> getLeft() != NULL) {
         empty_code.push_back(0);
@@ -53,4 +53,12 @@ HBTNode* Utilities::constructTree(const std::map<char, int> symbol_frequency_map
         pq.push(internal);
     }
     return pq.top();
+}
+
+int Utilities::getNumberOfBits(const std::map<char, const std::vector<bool> > &stc_map, const std::map<char, int > &symbol_map) {
+    int number_of_bits = 0;
+    for (auto iter = symbol_map.begin(); iter != symbol_map.end(); ++iter) {
+        number_of_bits += stc_map.at(iter -> first).size() * symbol_map.at(iter -> first);
+    }
+    return number_of_bits;
 }
