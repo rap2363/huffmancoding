@@ -30,17 +30,14 @@ int main(int argc, char *argv[]) {
         ia >> symbolMap;
         icsm.close();
 
-        HBTNode* huffman_root = Utilities::constructTree(symbolMap);
+        const HBTNode* huffman_root = Utilities::constructTree(symbolMap);
         BinaryEncoder be;
 
         std::cout << "Decompressing file..." << std::endl;
         std::ifstream ifbs(compressed_file_name);
-        be.streamInBinaryFile(ifbs);
-        ifbs.close();
-
-        std::cout << "Writing out decompression..." << std::endl;
         std::ofstream ofs(decompressed_file_name);
-        be.streamOutCharacterFile(ofs, huffman_root);
+        be.decompressFromBinary(ifbs, ofs, huffman_root);
+        ifbs.close();
         ofs.close();
     }
 }

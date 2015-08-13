@@ -19,13 +19,15 @@ private:
         }
     };
 
-    static void getLeafCodes(const HBTNode*, std::map<char, std::vector<bool> > &, std::vector<bool>);
+    static void getLeafCodes(const HBTNode*, std::map<char, const std::vector<bool> > &, std::vector<bool>);
 
 public:
 
     // Constructs and returns a map of symbols to their respective codes.
-    static std::map<char, std::vector<bool> > constructSymbolToCodeMap(const HBTNode* );
+    static std::map<char, const std::vector<bool> > constructSymbolToCodeMap(const HBTNode* );
 
+    // Calculates the total number of bits required for a compression.
+    static int getNumberOfBits(const std::map<char, const std::vector<bool> > &, const std::map<char, int > &);
 
     // Constructs a dynamically allocated Huffman Tree from a map of symbols to ints (frequencies).
     // Returns a pointer to the root of the constructed tree.
