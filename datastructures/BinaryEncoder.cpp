@@ -43,7 +43,7 @@ void BinaryEncoder::compressToBinary(std::ifstream &char_fs, const int bit_strea
     char c;
     while (char_fs.get(c)) {
         if (stc_map.find(c) != stc_map.end()) {
-            this -> addBinarySequenceToCharacterBuffer(char_buffer, stc_map.at(c), buffer_index, bit_index);
+            addBinarySequenceToCharacterBuffer(char_buffer, stc_map.at(c), buffer_index, bit_index);
         }
     }
 

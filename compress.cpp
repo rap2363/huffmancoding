@@ -46,8 +46,7 @@ int main(int argc, char *argv[]) {
         std::ofstream obfs(original_file_name+".bin", std::ios::out | std::ios::binary);
 
         std::cout << "Compressing File to .bin & .csm binaries" << std::endl;
-        BinaryEncoder be;
-        be.compressToBinary(ifs, bit_stream_size, obfs, stc_map);
+        BinaryEncoder::compressToBinary(ifs, bit_stream_size, obfs, stc_map);
         ifs.close();
         obfs.close();
     }
