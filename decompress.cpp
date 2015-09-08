@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
 
     if (argc != 3) {
-        std::cout << "Decompressor requires 2 arguments: <compressed_file> <csm_file>" << std::endl;
+        std::cout << "Decompressor requires 2 arguments: <bin_file> <csm_file>" << std::endl;
     }
     else {
         std::string compressed_file_name = argv[1];

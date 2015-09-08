@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
 
     if (argc != 2) {
-        std::cout << "Compressor requires a file to compress!" << std::endl;
+        std::cout << "Compressor requires a file to compress: <file_to_compress>" << std::endl;
     }
     else {
         std::string original_file_name = argv[1];
