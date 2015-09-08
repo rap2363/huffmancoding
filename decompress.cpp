@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
 
     if (argc != 3) {
-        std::cout << "Decompressor requires 2 arguments: <compressed_file> <csm_file>" << std::endl;
+        std::cout << "Decompressor requires 2 arguments: <bin_file> <csm_file>" << std::endl;
     }
     else {
         std::string compressed_file_name = argv[1];
@@ -31,12 +31,11 @@ int main(int argc, char *argv[]) {
         icsm.close();
 
         const HBTNode* huffman_root = Utilities::constructTree(symbolMap);
-        BinaryEncoder be;
 
         std::cout << "Decompressing file..." << std::endl;
         std::ifstream ifbs(compressed_file_name);
         std::ofstream ofs(decompressed_file_name);
-        be.decompressFromBinary(ifbs, ofs, huffman_root);
+        BinaryEncoder::decompressFromBinary(ifbs, ofs, huffman_root);
         ifbs.close();
         ofs.close();
     }

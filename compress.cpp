@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
     std::map<char, int> symbolMap;
 
     if (argc != 2) {
-        std::cout << "Compressor requires a file to compress!" << std::endl;
+        std::cout << "Compressor requires a file to compress: <file_to_compress>" << std::endl;
     }
     else {
         std::string original_file_name = argv[1];
@@ -46,8 +46,7 @@ int main(int argc, char *argv[]) {
         std::ofstream obfs(original_file_name+".bin", std::ios::out | std::ios::binary);
 
         std::cout << "Compressing File to .bin & .csm binaries" << std::endl;
-        BinaryEncoder be;
-        be.compressToBinary(ifs, bit_stream_size, obfs, stc_map);
+        BinaryEncoder::compressToBinary(ifs, bit_stream_size, obfs, stc_map);
         ifs.close();
         obfs.close();
     }
