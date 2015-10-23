@@ -5,10 +5,10 @@ BOOSTFLAG=-lboost_serialization
 all: compress decompress
 
 compress: datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o compress.o
-	$(CC) datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o compress.o -o bin/compress $(BOOSTFLAG)
+	$(CC) datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o compress.o -o compress $(BOOSTFLAG)
 
 decompress: datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o decompress.o
-	$(CC) datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o decompress.o -o bin/decompress $(BOOSTFLAG)
+	$(CC) datastructures/HuffmanBinaryTree.o datastructures/BinaryEncoder.o utilities.o decompress.o -o decompress $(BOOSTFLAG)
 
 compress.o: compress.cpp
 	$(CC) $(CFLAGS) compress.cpp
